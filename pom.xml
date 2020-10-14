@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.xtivia.mule4</groupId>
+	<artifactId>local-parent-pom</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+	<name>local-parent-pom</name>
+
+    <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<app.runtime>4.2.1</app.runtime>
+		<mule.maven.plugin.version>3.2.7</mule.maven.plugin.version>
+		<finalName>${project.artifactId}-${project.version}</finalName>
+	</properties>
+
+	
+
+	<profiles>
+	<profile>
+      <id>onPremise</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.mule.tools.maven</groupId>
+            <artifactId>mule-maven-plugin</artifactId>
+            <version>${mule.maven.plugin.version}</version>
+            <configuration>
+              <armDeployment>
+                <muleVersion>${mule.version}</muleVersion>
+                <username>${mule.username}</username>
+                <password>${mule.password}</password>
+                <uri>${mule.uri}</uri>
+                <businessGroup>${mule.businessGroup}</businessGroup>
+                <environment>${mule.environment}</environment>
+                <targetType>${mule.targetType}</targetType>
+                <target>${mule.target}</target>
+              </armDeployment>
+            </configuration>
+            <executions>
+              <execution>
+                <id>deploy</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>undeploy</id>
+                <phase>undeploy</phase>
+                <goals>
+                  <goal>undeploy</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>${apache.maven.deploy.version}</version>
+            <configuration>
+              <skip>${apache.maven.deploy.skip}</skip>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <distributionManagement>
+		<repository>
+			<id>hertzcentral</id>
+			
+			<url>http://10.218.57.102/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			
+			<url>http://10.218.57.102/artifactory/libs-release-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+    </profile>
+    
+    <profile>
+      <id>onPremise-domain</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.hertz.mule4</groupId>
+          <artifactId>onpremise-domain</artifactId>
+          <version>1.0.0</version>
+          <classifier>mule-domain</classifier>
+          <scope>provided</scope>
+          <optional>true</optional>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>${apache.maven.deploy.version}</version>
+            <configuration>
+              <skip>${apache.maven.deploy.skip}</skip>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+	
+	<profile>
+		<id>cloudHub</id>
+		<build>
+		<plugins>
+			<plugin>
+				<groupId>org.mule.tools.maven</groupId>
+			    <artifactId>mule-maven-plugin</artifactId>
+				<configuration>
+			    <cloudHubDeployment>
+			      	<muleVersion>${mule.version}</muleVersion>
+	                <username>${mule.username}</username>
+	                <password>${mule.password}</password>
+	                <uri>${mule.uri}</uri>
+	                <applicationName>${mule.applicationName}</applicationName>
+	                <artifact>${mule.artifact}</artifact>
+	                <skip>${mule.skip}</skip>
+	                <businessGroup>${mule.businessGroup}</businessGroup>
+	                <workerType>${mule.workerType}</workerType>
+	                <workers>${mule.workers}</workers>
+	                <environment>${mule.environment}</environment>
+	                <region>${mule.region}</region>
+	                <properties>
+	                  <mule.env>${mule.env}</mule.env>
+	                  <property.key>${property.key}</property.key>	                  
+	                  <anypoint.platform.client_id>${business.group.client.id}</anypoint.platform.client_id>
+	                  <anypoint.platform.client_secret>${business.group.client.secret}</anypoint.platform.client_secret>
+	                  <api.autodiscovery.id>${api.autodiscovery.id}</api.autodiscovery.id>
+                    </properties>
+			    </cloudHubDeployment>
+			  </configuration>
+			  <executions>
+				<execution>
+					<id>deploy</id>
+					<phase>deploy</phase>
+					<goals>
+						<goal>deploy</goal>
+					</goals>
+				</execution>
+			  </executions>
+			</plugin>
+		</plugins>
+		</build>
+		<distributionManagement>
+		<repository>
+			<id>hertzcentral</id>
+			
+			<url>http://10.218.57.102/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			
+			<url>http://10.218.57.102/artifactory/libs-release-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+	</profile>
+	
+	<profile>
+		<id>rtf</id>
+		<build>
+		<plugins>
+			<plugin>
+				<groupId>org.mule.tools.maven</groupId>
+			    <artifactId>mule-maven-plugin</artifactId>
+				<configuration>
+			    <classifier default-value="mule-application">${rtf.classifier}</classifier>
+              <runtimeFabricDeployment>
+                <muleVersion>${mule.version}</muleVersion>
+                <server>${settings.server.id}</server>
+                <username>${mule.username}</username>
+                <password>${mule.password}</password>
+                <uri default-value="https://anypoint.mulesoft.com">${mule.uri}</uri>
+                <applicationName>${mule.applicationName}</applicationName>
+                <skip default-value="false">${mule.skip}</skip>
+                <businessGroup>${mule.businessGroup}</businessGroup>
+                <!-- <businessGroupId>${mule.businessGroupId}</businessGroupId> -->
+                <environment>${mule.environment}</environment>
+                <provider default-value="MC">${rtf.provider}</provider>
+                <target>${mule.target}</target>
+                <!-- <clusteringEnabled default-value="false">${rtf.clusteringEnabled}</clusteringEnabled> -->
+                <properties>
+                  <mule.env>${mule.env}</mule.env>
+                  <property.key>${property.key}</property.key>
+                  <anypoint.platform.analytics_base_uri>https://analytics-ingest.anypoint.mulesoft.com</anypoint.platform.analytics_base_uri>
+                  <anypoint.platform.platform_base_uri>https://anypoint.mulesoft.com/apiplatform</anypoint.platform.platform_base_uri>
+                  <anypoint.platform.coreservice_base_uri>https://anypoint.mulesoft.com/accounts</anypoint.platform.coreservice_base_uri>
+                  <anypoint.platform.contracts_base_uri>https://anypoint.mulesoft.com/apigateway/ccs</anypoint.platform.contracts_base_uri>
+                  <anypoint.platform.client_id>${business.group.client.id}</anypoint.platform.client_id>
+                  <anypoint.platform.client_secret>${business.group.client.secret}</anypoint.platform.client_secret>
+                  <api.autodiscovery.id>${api.autodiscovery.id}</api.autodiscovery.id>
+                </properties>
+                <deploymentSettings>
+                  <!-- <publicUrl>${rtf.publicUrl}</publicUrl> -->
+                  <!-- <replicationFactor default-value="1">${rtf.replicationFactor}</replicationFactor> -->
+                  <!-- <lastMileSecurity default-value="false">${rtf.lastMileSecurity}</lastMileSecurity> -->
+                  <!-- <memoryReserved default-value="700Mi">${rtf.memoryReserved}</memoryReserved> -->
+                  <!-- <memoryMax default-value="700Mi">${rtf.memoryMax}</memoryMax> -->
+                  <!-- <cpuReserved default-value="500m">${rtf.cpuReserved}</cpuReserved> -->
+                  <!-- <cpuMax default-value="500m">${rtf.cpuMax}</cpuMax> -->
+                </deploymentSettings>
+                <!-- <deploymentTimeout default-value="1000000">${rtf.deploymentTimeout}</deploymentTimeout> -->
+                <skipDeploymentVerification default-value="false">${rtf.skipDeploymentVerification}</skipDeploymentVerification>
+              </runtimeFabricDeployment>
+			  </configuration>
+			  <executions>
+				<execution>
+					<id>deploy</id>
+					<phase>deploy</phase>
+					<goals>
+						<goal>deploy</goal>
+					</goals>
+				</execution>
+			  </executions>
+			</plugin>
+		</plugins>
+		</build>
+		<distributionManagement>
+		<repository>
+			<id>hertzcentral</id>
+			
+			<url>http://10.218.57.102/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			
+			<url>http://10.218.57.102/artifactory/libs-release-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+	</profile>
+</profiles>
+
+	<dependencies>
+        <dependency>
+            <groupId>org.mule.connectors</groupId>
+            <artifactId>mule-http-connector</artifactId>
+            <version>1.5.6</version>
+            <classifier>mule-plugin</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.connectors</groupId>
+            <artifactId>mule-sockets-connector</artifactId>
+            <version>1.1.5</version>
+            <classifier>mule-plugin</classifier>
+        </dependency>
+	</dependencies>
+
+	<repositories>
+          <repository>
+            <id>anypoint-exchange</id>
+            <name>Anypoint Exchange</name>
+            <url>https://maven.anypoint.mulesoft.com/api/v1/maven</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>mulesoft-releases</id>
+            <name>MuleSoft Releases Repository</name>
+            <url>https://repository.mulesoft.org/releases/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mulesoft-releases</id>
+            <name>mulesoft release repository</name>
+            <layout>default</layout>
+            <url>https://repository.mulesoft.org/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
